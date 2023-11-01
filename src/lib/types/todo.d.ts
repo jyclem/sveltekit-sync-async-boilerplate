@@ -5,7 +5,7 @@ type Todo = {
 
 type TodoEvent = {
   name: string
-  justAppeared: boolean
+  isFalling: boolean
 }
 
 type GetTodos = () => Promise<Response>

@@ -7,11 +7,14 @@
   <div class="title">Events</div>
   <div class="events">
     {#each $todoEvents as event (event)}
-      {#if event.justAppeared}
-        <div transition:fly={{ y: '100em', duration: 100000 }}>
-          {event.name}
-        </div>
-      {/if}
+      <!-- {#if event.justAppeared} -->
+        <!-- <div transition:fly={{ y: '100em', duration: 100000 }}> -->
+      <!-- {/if} -->
+
+      <!-- a more performant alternative using "transform" (really noticeable on Firefox) -->
+      <div class:fall={event.isFalling}>
+        {event.name}
+      </div>
     {/each}
   </div>
 </div>
@@ -34,6 +37,12 @@
       div {
         color: #c6c6c6;
         font-style: italic;
+
+        // a more performant alternative using "transform" (really noticeable on Firefox)
+        &.fall {
+          transform: translateY(50em);
+          transition: all 15s linear;
+        }
       }
     }
   }

@@ -7,11 +7,11 @@ export const todoEvents = (() => {
     subscribe,
     set,
     add: (name: string) => {
-      const newEvent = { name, justAppeared: true }
+      const newEvent = { name, isFalling: false }
       update((events) => [newEvent, ...events])
 
       setTimeout(() => {
-        newEvent.justAppeared = false
+        newEvent.isFalling = true
         update((events) => events)
       }, 100)
     },
