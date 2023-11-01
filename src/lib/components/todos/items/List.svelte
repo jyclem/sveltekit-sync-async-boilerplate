@@ -3,7 +3,7 @@
   export let error = ''
   export let show: (id: string) => Promise<void>
   export let remove: (id: string) => Promise<void>
-  export let reset: () => void
+  export let resetTodo: () => void
 
   let todoBeingUpdated: Todo|undefined
 
@@ -16,7 +16,7 @@
   const onCancel = () => {
     todoBeingUpdated = undefined
 
-    reset()
+    resetTodo()
   }
 </script>
 

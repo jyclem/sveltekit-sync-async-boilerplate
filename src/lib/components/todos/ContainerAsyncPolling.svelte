@@ -6,19 +6,20 @@
   import { getJob, createTodo, updateTodo, deleteTodo } from '$lib/api/todos-async'
 
   import ContainerWrapper from './ContainerWrapper.svelte'
+  import Description from './items/Description.svelte'
   import Input from './items/Input.svelte'
   import List from './items/List.svelte'
 
   const text = `Here we execute all our create, update and delete requests asynchronoulsy.
-                It means that they will get a job_id in response, and poll on the associated job
-                until it is finished before fetching the todos to refresh the list.`
+                It means that they will get a job_id in response, and we will poll on the associated
+                job until it is marked as 'complete' before fetching the todos to refresh the list.`
 
   let errorIndex = '', errorShow = '', errorCreate = '', errorUpdate = '', errorDelete = ''
   let list: Todo[] = []
   let todo: Todo|undefined
 
   const poll = async (jobId: string, callback: () => void) => {
-    const pollingId = setInterval(async () => {
+    const polling = async () => {
       const response = await getJob(jobId)
 
       todoEvents.add(`Polling: getJob -> GET /job/${jobId}`)
@@ -32,7 +33,10 @@
 
         callback()
       }
-    }, 1000)
+    }
+
+    polling() // we execute the action once right away
+    const pollingId = setInterval(polling, 1000)
   }
 
   const index = async () => {
@@ -115,18 +119,30 @@
     }
   }
 
+  const resetError = () => {
+    errorIndex = '', errorShow = '', errorCreate = '', errorUpdate = '', errorDelete = ''
+  }
+
+  const resetTodo = () => {
+    todo = undefined
+  }
+
   onMount(async () => {
     index()
   })
 
 </script>
 
-<ContainerWrapper {text}>
+<ContainerWrapper>
+  <svelte:fragment slot="description">
+    <Description {text} />
+  </svelte:fragment>
+
   <svelte:fragment slot="input">
-    <Input {todo} error={errorCreate || errorShow || errorUpdate || errorDelete} {create} {update} />
+    <Input {todo} error={errorShow || errorCreate || errorUpdate || errorDelete} {create} {update} {resetError} {resetTodo} />
   </svelte:fragment>
 
   <svelte:fragment slot="list">
-    <List {list} error={errorIndex} {show} {remove} reset={() => todo = undefined} />
+    <List {list} error={errorIndex} {show} {remove} {resetTodo} />
   </svelte:fragment>
 </ContainerWrapper>

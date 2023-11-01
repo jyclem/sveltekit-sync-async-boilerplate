@@ -1,20 +1,17 @@
 <script lang="ts">
-  import Description from './items/Description.svelte'
   import Events from './items/Events.svelte'
-
-  export let text = ''
 </script>
 
 <div class="container">
   <div class="column">
     <div class="row">
-      <Description {text} />
+      <slot name="description" />
     </div>
     <div class="row">
-      <slot name="input" />
+      <slot name ="input" />
     </div>
     <div class="row">
-      <slot name="list" />
+      <slot name ="list" />
     </div>
   </div>
 

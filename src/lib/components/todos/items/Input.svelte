@@ -3,12 +3,14 @@
   export let error: string = ''
   export let create: (name: string) => Promise<boolean>
   export let update: (id: string, name: string) => Promise<boolean>
+  export let resetError: () => void
+  export let resetTodo: () => void
 
   let name: string = ''
 
   const onInput = (event: Event) => {
-    error = ''
     name = (event.target as HTMLInputElement).value
+    resetError()
   }
 
   const onCreate = async () => {
@@ -22,7 +24,7 @@
 
     if (isSuccess) {
       name = ''
-      todo = undefined
+      resetTodo()
     }
   }
 </script>

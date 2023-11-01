@@ -5,6 +5,7 @@
   import { getTodos, getTodo, createTodo, updateTodo, deleteTodo } from '$lib/api/todos-sync'
 
   import ContainerWrapper from './ContainerWrapper.svelte'
+  import Description from './items/Description.svelte'
   import Input from './items/Input.svelte'
   import List from './items/List.svelte'
 
@@ -90,18 +91,30 @@
     }
   }
 
+  const resetError = () => {
+    errorIndex = '', errorShow = '', errorCreate = '', errorUpdate = '', errorDelete = ''
+  }
+
+  const resetTodo = () => {
+    todo = undefined
+  }
+
   onMount(async () => {
     index()
   })
 
 </script>
 
-<ContainerWrapper {text}>
+<ContainerWrapper>
+  <svelte:fragment slot="description">
+    <Description {text} />
+  </svelte:fragment>
+
   <svelte:fragment slot="input">
-    <Input {todo} error={errorCreate || errorShow || errorUpdate || errorDelete} {create} {update} />
+    <Input {todo} error={errorShow || errorCreate || errorUpdate || errorDelete} {create} {update} {resetError} {resetTodo} />
   </svelte:fragment>
 
   <svelte:fragment slot="list">
-    <List {list} error={errorIndex} {show} {remove} reset={() => todo = undefined} />
+    <List {list} error={errorIndex} {show} {remove} {resetTodo} />
   </svelte:fragment>
 </ContainerWrapper>
