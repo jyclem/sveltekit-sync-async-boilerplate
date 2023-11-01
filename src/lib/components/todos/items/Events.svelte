@@ -33,6 +33,7 @@
       border-radius: 5px;
       padding: 0.5em;
       overflow: hidden;
+      max-height: 35em;
 
       div {
         color: #c6c6c6;

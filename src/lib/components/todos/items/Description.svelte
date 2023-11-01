@@ -3,3 +3,9 @@
 </script>
 
 <div>{text}</div>
+
+<style lang="scss">
+    div {
+      max-width: 40em;
+    }
+</style>

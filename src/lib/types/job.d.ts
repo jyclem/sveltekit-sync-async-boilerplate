@@ -1,0 +1,1 @@
+type GetJob = (id: string) => Promise<Response>

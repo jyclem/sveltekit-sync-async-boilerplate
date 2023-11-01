@@ -2,18 +2,38 @@
   import { onMount } from 'svelte'
 
   import { todoEvents } from '$lib/stores/todoEvents'
-  import { getTodos, getTodo, createTodo, updateTodo, deleteTodo } from '$lib/api/todos-sync'
+  import { getTodos, getTodo } from '$lib/api/todos-sync'
+  import { getJob, createTodo, updateTodo, deleteTodo } from '$lib/api/todos-async'
 
   import ContainerWrapper from './ContainerWrapper.svelte'
   import Input from './items/Input.svelte'
   import List from './items/List.svelte'
 
-  const text = `Here we execute all our requests synchronoulsy like we would do with a classic API.
-                After a create, update or remove, we refetch the todos to refresh the list.`
+  const text = `Here we execute all our create, update and delete requests asynchronoulsy.
+                It means that they will get a job_id in response, and poll on the associated job
+                until it is finished before fetching the todos to refresh the list.`
 
   let errorIndex = '', errorShow = '', errorCreate = '', errorUpdate = '', errorDelete = ''
   let list: Todo[] = []
   let todo: Todo|undefined
+
+  const poll = async (jobId: string, callback: () => void) => {
+    const pollingId = setInterval(async () => {
+      const response = await getJob(jobId)
+
+      todoEvents.add(`Polling: getJob -> GET /job/${jobId}`)
+
+      const res = await response.json()
+
+      if (res.status === 'complete') {
+        todoEvents.add('Polling: job execution complete')
+
+        clearInterval(pollingId)
+
+        callback()
+      }
+    }, 1000)
+  }
 
   const index = async () => {
     const response = await getTodos()
@@ -47,7 +67,9 @@
     if (response.status === 201) {
       const res = await response.json()
 
-      await index()
+      poll(res.job_id, async () => {
+        await index()
+      })
 
       return true
     } else {
@@ -63,9 +85,11 @@
     todoEvents.add(`Request: update -> PATCH /todos/${id} with {name: ${name}}`)
 
     if (response.status === 200) {
-      await response.json()
+      const res = await response.json()
 
-      await index()
+      poll(res.job_id, async () => {
+        await index()
+      })
 
       return true
     } else {
@@ -81,10 +105,11 @@
     todoEvents.add(`Request: remove -> DELETE /todos/${id}`)
 
     if (response.status === 200) {
-      await response.json()
+      const res = await response.json()
       
-      await index()
-
+      poll(res.job_id, async () => {
+        await index()
+      })
     } else {
       errorShow = response.statusText
     }

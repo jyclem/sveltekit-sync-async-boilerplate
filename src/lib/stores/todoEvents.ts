@@ -8,7 +8,7 @@ export const todoEvents = (() => {
     set,
     add: (name: string) => {
       const newEvent = { name, isFalling: false }
-      update((events) => [newEvent, ...events])
+      update((events) => [newEvent, ...events].splice(0, 15)) // we keep only the 15 last events
 
       setTimeout(() => {
         newEvent.isFalling = true
