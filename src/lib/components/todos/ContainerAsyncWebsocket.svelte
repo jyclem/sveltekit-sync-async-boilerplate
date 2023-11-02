@@ -2,10 +2,10 @@
   import { onMount } from 'svelte'
 
   import { todoEvents } from '$lib/stores/todoEvents'
+  import { connect } from '$lib/tools/websocket'
   import { 
-    connect,
     getTodos, getTodo, createTodo, updateTodo, deleteTodo,
-    indexStore, showStore, createStore, updateStore, destroyStore 
+    indexStoreTodo, showStoreTodo, createStoreTodo, updateStoreTodo, destroyStoreTodo
   } from '$lib/api/todos-websocket'
 
   import ContainerWrapper from './ContainerWrapper.svelte'
@@ -20,59 +20,54 @@
   let list: Todo[] = []
   let todo: Todo|undefined
 
-  $: if ($indexStore) { 
-    todoEvents.add('Websocket: index data received and indexStore updated')
+  $: if ($indexStoreTodo) {    
+    todoEvents.add('Websocket: index data received and indexStoreTodo updated')
 
-    if (($indexStore as WebsocketError).error) {
-      errorIndex = ($indexStore as WebsocketError).error
+    if (($indexStoreTodo as WebsocketError).error) {
+      errorIndex = ($indexStoreTodo as WebsocketError).error
     } else {
-      list = ($indexStore as Todo[])
+      list = ($indexStoreTodo as Todo[])
     }
-    indexStore.set(undefined)
   }
   
-  $: if ($showStore) {
-    todoEvents.add('Websocket: show data received and showStore updated')
+  $: if ($showStoreTodo) {
+    todoEvents.add('Websocket: show data received and showStoreTodo updated')
 
-    if (($showStore as WebsocketError).error) {
-      errorShow = ($showStore as WebsocketError).error
+    if (($showStoreTodo as WebsocketError).error) {
+      errorShow = ($showStoreTodo as WebsocketError).error
     } else {
-      todo = ($showStore as Todo)
+      todo = ($showStoreTodo as Todo)
     }
-    showStore.set(undefined)
   }
 
-  $: if ($createStore) {
-    todoEvents.add('Websocket: create data received and createStore updated')
+  $: if ($createStoreTodo) {
+    todoEvents.add('Websocket: create data received and createStoreTodo updated')
 
-    if (($createStore as WebsocketError).error) {
-      errorCreate = ($createStore as WebsocketError).error
+    if (($createStoreTodo as WebsocketError).error) {
+      errorCreate = ($createStoreTodo as WebsocketError).error
     } else {
       index()
     }
-    createStore.set(undefined)
   }
 
-  $: if ($updateStore) {
-    todoEvents.add('Websocket: update data received and updateStore updated')
+  $: if ($updateStoreTodo) {
+    todoEvents.add('Websocket: update data received and updateStoreTodo updated')
 
-    if (($updateStore as WebsocketError).error) {
-      errorUpdate = ($updateStore as WebsocketError).error
+    if (($updateStoreTodo as WebsocketError).error) {
+      errorUpdate = ($updateStoreTodo as WebsocketError).error
     } else {
       index()
     }
-    updateStore.set(undefined)
   }
 
-  $: if ($destroyStore) {
-    todoEvents.add('Websocket: create data received and destroyStore updated')
+  $: if ($destroyStoreTodo) {
+    todoEvents.add('Websocket: destroy data received and destroyStoreTodo updated')
 
-    if (($destroyStore as WebsocketError).error) {
-      errorDelete = ($destroyStore as WebsocketError).error
+    if (($destroyStoreTodo as WebsocketError).error) {
+      errorDelete = ($destroyStoreTodo as WebsocketError).error
     } else {
       index()
     }
-    destroyStore.set(undefined)
   }
 
   const index = async () => {
@@ -120,6 +115,14 @@
   onMount(() => {
     connect()
     index()
+
+    return () => {
+      indexStoreTodo.set(undefined)
+      showStoreTodo.set(undefined)
+      createStoreTodo.set(undefined)
+      updateStoreTodo.set(undefined)
+      destroyStoreTodo.set(undefined)
+    }
   })
 
 </script>

@@ -2,6 +2,7 @@
   <li><a href="/sync">Sync</a></li>
   <li><a href="/polling">Async - Polling</a></li>
   <li><a href="/websocket">Async - Websocket</a></li>
+  <li><a href="/websocket-enhanced">Async - Websocket Enhanced</a></li>
 </ul>
 
 <style lang="scss">

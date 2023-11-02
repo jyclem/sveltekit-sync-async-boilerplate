@@ -24,7 +24,7 @@
   .container {
     display: grid;
     grid-template-columns: 3fr 2fr;
-    column-gap: 1em;
+    column-gap: 0.5em;
 
     .row:not(:last-child) {
       margin-bottom: 2em;

@@ -24,14 +24,18 @@
 
       todoEvents.add(`Polling: getJob -> GET /job/${jobId}`)
 
-      const res = await response.json()
+      const res: Job = await response.json()
 
-      if (res.status === 'complete') {
-        todoEvents.add('Polling: job execution complete')
-
+      if (res.status && ['complete', 'failed', 'interrupted'].includes(res.status)) {
         clearInterval(pollingId)
 
-        callback()
+        if (res.status === 'complete') {
+          todoEvents.add('Polling: job execution complete')
+
+          callback()
+        } else {
+          errorCreate = 'An error occured'
+        }
       }
     }
 
