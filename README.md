@@ -1,18 +1,22 @@
-# create-svelte
+# SvelteKit Sync / Async (boilerplate)
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Installation
 
-## Creating a project
+* clone this project
+* `npm install`
+* (optional: if you don't use localhost, update the PUBLIC_API_URL variable in .env)
+* `npm run dev` (or `npm run dev -- --host` if you don't use localhost)
+* install the Backend part to test it [Ruby On Rails Sync / Async (boilerplate)](https://github.com/jyclem/rails-sync-async-boilerplate)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Goal
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+To show how we can use the Ruby On Rails Sync / Async (boilerplate) project in 4 different ways:
+* synchronously like we would do with a classic API
+* asynchronously using polling
+* asynchronously using websockets
+* (bonus) asynchronously using websockets but with sending a chain of actions instead of one action each time
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+The interesting thing here is that we always use the same endpoint Backend side, that is to say that we develop the endpoint once, and then, for all the different ways of accessing it, we benefit from the same authorization/sanitization/serialization mechanism, as well as the error handling.
 
 ## Developing
 
