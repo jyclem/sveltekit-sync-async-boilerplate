@@ -28,7 +28,7 @@
     }
   }
 
-  const show = async (id: string) => {
+  const show = async (id: Todo['id']) => {
     const response = await getTodo(id)
 
     todoEvents.add(`Request: show -> GET /todo/${id}`)
@@ -40,7 +40,7 @@
     }
   }
 
-  const create = async (name: string) => {
+  const create = async (name: Todo['name']) => {
     const response = await createTodo(name)
 
     todoEvents.add(`Request: create -> POST /todos with {name: ${name}}`)
@@ -58,7 +58,7 @@
     }
   }
 
-  const update = async (id: string, name: string) => {
+  const update = async (id: Todo['id'], name: Todo['name']) => {
     const response = await updateTodo(id, name)
 
     todoEvents.add(`Request: update -> PATCH /todos/${id} with {name: ${name}}`)
@@ -76,7 +76,7 @@
     }
   }
 
-  const remove = async (id: string) => {
+  const remove = async (id: Todo['id']) => {
     const response = await deleteTodo(id)
 
     todoEvents.add(`Request: remove -> DELETE /todos/${id}`)

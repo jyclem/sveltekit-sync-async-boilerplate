@@ -1,1 +1,0 @@
-type WebsocketError = { error: string }

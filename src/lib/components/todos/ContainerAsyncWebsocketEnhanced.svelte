@@ -5,7 +5,8 @@
   import { connect, send } from '$lib/tools/websocket'
   import { 
     getTodos, getTodo, createTodo, updateTodo, deleteTodo,
-    indexStoreTodo2, showStoreTodo2, createStoreTodo2, updateStoreTodo2, destroyStoreTodo2
+    indexStoreTodo2, showStoreTodo2, createStoreTodo2, updateStoreTodo2, destroyStoreTodo2,
+    errorIndexStoreTodo2, errorShowStoreTodo2, errorCreateStoreTodo2, errorUpdateStoreTodo2, errorDestroyStoreTodo2
   } from '$lib/api/todos-websocket-chain'
 
   import ContainerWrapper from './ContainerWrapper.svelte'
@@ -19,55 +20,30 @@
                 the result and then ask for the refresh of the list, it is automatically done by the
                 Backend if the first action is successful.`
 
-  let errorIndex = '', errorShow = '', errorCreate = '', errorUpdate = '', errorDelete = ''
-  let list: Todo[] = []
-  let todo: Todo|undefined
-
-  $: if ($indexStoreTodo2) { 
-    todoEvents.add('Websocket: index data received and indexStoreTodo2 updated')
-
-    if (($indexStoreTodo2 as WebsocketError).error) {
-      errorIndex = ($indexStoreTodo2 as WebsocketError).error
-    } else {
-      list = ($indexStoreTodo2 as Todo[])
-    }
-  }
-  
-  $: if ($showStoreTodo2) {
-    todoEvents.add('Websocket: show data received and showStoreTodo2 updated')
-
-    if (($showStoreTodo2 as WebsocketError).error) {
-      errorShow = ($showStoreTodo2 as WebsocketError).error
-    } else {
-      todo = ($showStoreTodo2 as Todo)
-    }
-  }
-
-  $: if (($createStoreTodo2 as WebsocketError)?.error) {
-    errorCreate = ($createStoreTodo2 as WebsocketError).error
-  }
-
-  $: if (($updateStoreTodo2 as WebsocketError)?.error) {
-    errorUpdate = ($updateStoreTodo2 as WebsocketError).error
-  }
-
-  $: if (($destroyStoreTodo2 as WebsocketError)?.error) {
-    errorDelete = ($destroyStoreTodo2 as WebsocketError).error
-  }
-
+  // index
   const index = async () => {
     todoEvents.add('Websocket: send index action on todos controller')
 
     send(getTodos())
   }
 
-  const show = async (id: string) => {
+  $: if ($indexStoreTodo2) { 
+    todoEvents.add('Websocket: index data received and indexStoreTodo2 updated')
+  }
+
+  // show
+  const show = async (id: Todo['id']) => {
     todoEvents.add('Websocket: send show action on todos controller')
 
     send(getTodo(id))
   }
 
-  const create = async (name: string) => {
+  $: if ($showStoreTodo2) {
+    todoEvents.add('Websocket: show data received and showStoreTodo2 updated')
+  }
+
+  // create
+  const create = async (name: Todo['name']) => {
     todoEvents.add('Websocket: send create and index actions on todos controller')
 
     send({ 1: createTodo(name, 'broadcast-error-only'), 2: getTodos() })
@@ -75,27 +51,33 @@
     return true
   }
 
-  const update = async (id: string, name: string) => {
+  // update
+  const update = async (id: Todo['id'], name: Todo['name']) => {
     todoEvents.add('Websocket: send update and index actions on todos controller')
 
     send({ 1: updateTodo(id, name, 'broadcast-error-only'), 2: getTodos() })
     
-
     return true
   }
 
-  const remove = async (id: string) => {
+  // destroy
+  const remove = async (id: Todo['id']) => {
     todoEvents.add('Websocket: send destroy and index actions on todos controller')
 
     send({ 1: deleteTodo(id, 'broadcast-error-only'), 2: getTodos() })
   }
 
+  // resets
   const resetError = () => {
-    errorIndex = '', errorShow = '', errorCreate = '', errorUpdate = '', errorDelete = ''
+    errorIndexStoreTodo2.set(undefined)
+    errorShowStoreTodo2.set(undefined)
+    errorCreateStoreTodo2.set(undefined)
+    errorUpdateStoreTodo2.set(undefined)
+    errorDestroyStoreTodo2.set(undefined)
   }
 
   const resetTodo = () => {
-    todo = undefined
+    showStoreTodo2.set(undefined)
   }
 
   onMount(() => {
@@ -119,10 +101,14 @@
   </svelte:fragment>
 
   <svelte:fragment slot="input">
-    <Input {todo} error={errorShow || errorCreate || errorUpdate || errorDelete} {create} {update} {resetError} {resetTodo} />
+    <Input
+      todo={$showStoreTodo2}
+      error={$errorShowStoreTodo2 || $errorCreateStoreTodo2 || $errorUpdateStoreTodo2 || $errorDestroyStoreTodo2}
+      {create} {update} {resetError} {resetTodo} 
+    />
   </svelte:fragment>
 
   <svelte:fragment slot="list">
-    <List {list} error={errorIndex} {show} {remove} {resetTodo} />
+    <List list={$indexStoreTodo2} error={$errorIndexStoreTodo2} {show} {remove} {resetTodo} />
   </svelte:fragment>
 </ContainerWrapper>

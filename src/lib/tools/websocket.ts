@@ -1,13 +1,31 @@
+import { writable } from 'svelte/store'
+import type { Writable } from 'svelte/store'
+
 import { PUBLIC_API_URL } from '$env/static/public'
 import { createConsumer } from '@rails/actioncable'
-import { indexStoreTodo, showStoreTodo, createStoreTodo, updateStoreTodo, destroyStoreTodo } from '$lib/api/todos-websocket'
-import { indexStoreTodo2, showStoreTodo2, createStoreTodo2, updateStoreTodo2, destroyStoreTodo2 } from '$lib/api/todos-websocket-chain'
+
+export type ErrorStore = Writable<undefined | string>
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// for security reason we use a mapping (so that we don't need to use an eval)
-const MAPPING: any = { 
-  indexStoreTodo, showStoreTodo, createStoreTodo, updateStoreTodo, destroyStoreTodo,
-  indexStoreTodo2, showStoreTodo2, createStoreTodo2, updateStoreTodo2, destroyStoreTodo2
+const SUCCESS_MAPPING: any = {}
+const ERROR_MAPPING: any = {}
+
+export const createWebsocketStores = (successStoreKey: string) => {
+	if (successStoreKey in SUCCESS_MAPPING) {
+		throw `${successStoreKey} already exists in SUCCESS_MAPPING`
+	}
+
+	if (successStoreKey in ERROR_MAPPING) {
+		throw `${successStoreKey} already exists in ERROR_MAPPING`
+	}
+
+	const successStore: Writable<any> = writable(undefined)
+	const errorStore: ErrorStore = writable(undefined)
+
+	SUCCESS_MAPPING[successStoreKey] = successStore
+	ERROR_MAPPING[successStoreKey] = errorStore
+
+	return [successStore, errorStore]
 }
 
 let websocket: any
@@ -28,9 +46,11 @@ export const connect = () => {
 				if (!isConnected) return
 
 				if (response?.included_in_response?.store) {
-					(MAPPING[response.included_in_response.store] as any).set(
-						response.error ? { error: response.error } : response.data
-					)
+					if (response.error) {
+						(ERROR_MAPPING[response.included_in_response.store] as any).set(response.error)
+					} else {
+						(SUCCESS_MAPPING[response.included_in_response.store] as any).set(response.data)
+					}
 				}
 			}
 		}

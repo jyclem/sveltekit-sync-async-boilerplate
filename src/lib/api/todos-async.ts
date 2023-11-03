@@ -4,7 +4,7 @@ export const getJob: GetJob = (id) => {
   return fetch(`${PUBLIC_API_URL}/jobs/${id}`)
 }
 
-export const createTodo: CreateTodo = (name) => {
+export const createTodo: CreateTodo = (name: Todo['name']) => {
   return fetch(`${PUBLIC_API_URL}/todos`, {
     method: 'POST',
     headers: {
@@ -15,7 +15,7 @@ export const createTodo: CreateTodo = (name) => {
   })
 }
 
-export const updateTodo: UpdateTodo = (id, name) => {
+export const updateTodo: UpdateTodo = (id: Todo['id'], name: Todo['name']) => {
   return fetch(`${PUBLIC_API_URL}/todos/${id}`, {
     method: 'PATCH',
     headers: {
@@ -26,7 +26,7 @@ export const updateTodo: UpdateTodo = (id, name) => {
   })
 }
 
-export const deleteTodo: DeleteTodo = (id: string) => {
+export const deleteTodo: DeleteTodo = (id: Todo['id']) => {
   return fetch(`${PUBLIC_API_URL}/todos/${id}`, {
     method: 'DELETE',
     headers: {

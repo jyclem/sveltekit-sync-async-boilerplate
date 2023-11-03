@@ -9,6 +9,7 @@
   ul {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 
     list-style-type: none;
     margin: 0;
@@ -26,9 +27,11 @@
         text-align: center;
         padding: 14px 16px;
         text-decoration: none;
+      }
 
-        &:hover {
-          background-color: white;
+      &:hover {
+        background-color: white;
+        a {
           color: #333;
         }
       }

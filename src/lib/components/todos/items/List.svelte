@@ -1,8 +1,8 @@
 <script lang="ts">
   export let list: Todo[] = []
   export let error = ''
-  export let show: (id: string) => Promise<void>
-  export let remove: (id: string) => Promise<void>
+  export let show: (id: Todo['id']) => Promise<void>
+  export let remove: (id: Todo['id']) => Promise<void>
   export let resetTodo: () => void
 
   let todoBeingUpdated: Todo|undefined

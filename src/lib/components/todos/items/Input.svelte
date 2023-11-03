@@ -1,8 +1,8 @@
 <script lang="ts">
   export let todo: Todo|undefined
   export let error: string = ''
-  export let create: (name: string) => Promise<boolean>
-  export let update: (id: string, name: string) => Promise<boolean>
+  export let create: (name: Todo['name']) => Promise<boolean>
+  export let update: (id: Todo['id'], name: Todo['name']) => Promise<boolean>
   export let resetError: () => void
   export let resetTodo: () => void
 
