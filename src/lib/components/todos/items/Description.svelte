@@ -1,11 +1,11 @@
 <script lang="ts">
-    export let text: String = ''
+	export let text: String = ''
 </script>
 
 <div>{text}</div>
 
 <style lang="scss">
-    div {
-      max-width: 40em;
-    }
+	div {
+		max-width: 40em;
+	}
 </style>

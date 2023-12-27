@@ -1,11 +1,11 @@
 type Todo = {
-  id: string
-  name: string
+	id: string
+	name: string
 }
 
 type TodoEvent = {
-  name: string
-  isFalling: boolean
+	name: string
+	isFalling: boolean
 }
 
 type GetTodos = () => Promise<Response>
@@ -17,4 +17,3 @@ type CreateTodo = (name: Todo['name']) => Promise<Response>
 type UpdateTodo = (id: Todo['id'], name: Todo['name']) => Promise<Response>
 
 type DeleteTodo = (id: Todo['id']) => Promise<Response>
-
