@@ -58,7 +58,7 @@
 	const create = async (name: Todo['name']) => {
 		todoEvents.add('Websocket: send create and index actions on todos controller')
 
-		send({ 1: createTodo(name, 'broadcast-error-only'), 2: getTodos() })
+		send({ 1: createTodo(name, { mode: 'broadcast-error-only' }), 2: getTodos() })
 
 		return true
 	}
@@ -67,7 +67,7 @@
 	const update = async (id: Todo['id'], name: Todo['name']) => {
 		todoEvents.add('Websocket: send update and index actions on todos controller')
 
-		send({ 1: updateTodo(id, name, 'broadcast-error-only'), 2: getTodos() })
+		send({ 1: updateTodo(id, name, { mode: 'broadcast-error-only' }), 2: getTodos() })
 
 		return true
 	}
@@ -76,7 +76,7 @@
 	const remove = async (id: Todo['id']) => {
 		todoEvents.add('Websocket: send destroy and index actions on todos controller')
 
-		send({ 1: deleteTodo(id, 'broadcast-error-only'), 2: getTodos() })
+		send({ 1: deleteTodo(id, { mode: 'broadcast-error-only' }), 2: getTodos() })
 	}
 
 	// resets

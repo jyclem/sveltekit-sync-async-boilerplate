@@ -16,41 +16,46 @@ export const [destroyStoreTodo2, errorDestroyStoreTodo2] = createWebsocketStores
 	Todo & { _destroy: boolean }
 >('destroyStoreTodo2')
 
-export const getTodos = (mode?: Mode) =>
-	addMode(mode, {
+export const getTodos = (options: { mode?: Mode, async?: boolean } = {}) =>
+	addMode(options.mode, {
 		_controller: 'todos',
 		_action: 'index',
-		included_in_response: { store: 'indexStoreTodo2' }
+		included_in_response: { store: 'indexStoreTodo2' },
+		async: options.async || false
 	})
 
-export const getTodo = (id: Todo['id'], mode?: Mode) =>
-	addMode(mode, {
+export const getTodo = (id: Todo['id'], options: { mode?: Mode, async?: boolean } = {}) =>
+	addMode(options.mode, {
 		_controller: 'todos',
 		_action: 'show',
 		params: { id },
-		included_in_response: { store: 'showStoreTodo2' }
+		included_in_response: { store: 'showStoreTodo2' },
+		async: options.async || false
 	})
 
-export const createTodo = (name: Todo['name'], mode?: Mode) =>
-	addMode(mode, {
+export const createTodo = (name: Todo['name'], options: { mode?: Mode, async?: boolean } = {}) =>
+	addMode(options.mode, {
 		_controller: 'todos',
 		_action: 'create',
 		params: { name },
-		included_in_response: { store: 'createStoreTodo2' }
+		included_in_response: { store: 'createStoreTodo2' },
+		async: options.async || false
 	})
 
-export const updateTodo = (id: Todo['id'], name: Todo['name'], mode?: Mode) =>
-	addMode(mode, {
+export const updateTodo = (id: Todo['id'], name: Todo['name'], options: { mode?: Mode, async?: boolean } = {}) =>
+	addMode(options.mode, {
 		_controller: 'todos',
 		_action: 'update',
 		params: { id, name },
-		included_in_response: { store: 'updateStoreTodo2' }
+		included_in_response: { store: 'updateStoreTodo2' },
+		async: options.async || false
 	})
 
-export const deleteTodo = (id: Todo['id'], mode?: Mode) =>
-	addMode(mode, {
+export const deleteTodo = (id: Todo['id'], options: { mode?: Mode, async?: boolean } = {}) =>
+	addMode(options.mode, {
 		_controller: 'todos',
 		_action: 'destroy',
 		params: { id },
-		included_in_response: { store: 'destroyStoreTodo2' }
+		included_in_response: { store: 'destroyStoreTodo2' },
+		async: options.async || false
 	})

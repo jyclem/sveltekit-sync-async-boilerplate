@@ -90,6 +90,7 @@ type ParamsExtended<ParamsType> = {
 	included_in_response: { store: string }
 	no_broadcast?: boolean
 	broadcast_error_only?: boolean
+	async: boolean
 } & Params<ParamsType>
 
 export type Mode = 'normal' | 'no-broadcast' | 'broadcast-error-only'
